@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<body>
+<h1>Pizza Order Form</h1>
+
+<img src="brokenImage.jpg" alt="Image Missing">
+
+<form method="POST" action="#">
+	<p> Name<br/><input type="text" name="Name" required></p>
+	<p> Address, i.e. #### Street Name<br/><input type="text" name="Addr" required></p>
+	<p> Phone #, i.e. 123-456-7899<br/><input type="tel" name="Tele" required pattern="\d\d\d[\-]\d\d\d[\-]\d\d\d\d"></p>
+	<p> Pizza size<br>
+		<input type="radio" name="group1" value="Large" required> Large<br>
+		<input type="radio" name="group1" value="Medium" required> Medium<br>
+		<input type="radio" name="group1" value="Small" required> Small<br>
+	</p>
+	<p> Toppings:<br>
+		<input type="checkbox" name="saus"> sausage <br>
+		<input type="checkbox" name="pepp"> pepperoni <br>
+	</p>
+	<p><input type="submit" value="Place Order"></p>
+	<p><input type="reset" value="Clear"></p>
+</form>
+
+<hr/>
+<br/>
+
+</body>
+</html>
