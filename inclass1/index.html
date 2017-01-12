@@ -1,0 +1,62 @@
+<h1>Sample Page</h1>
+
+<p>Paragraphs are separated as "blocks" of text.</p>
+<p>Simple markup such as <b>bold face</b> or <em>emphasized</em> text. Note that white space is ignored. If we want to "control" the layout, we should use styles. If we need some small control we can insert a line break. For example,</p>
+<img src="brokenImage.jpg" alt="Image Missing">
+<br/>
+<img src="https://staff.rice.edu/images/staff/branding/logo.jpg" width="200px" title="Rice Logo">
+<p>Hyperlinks are contained within <a name="anchor">anchors</a> which can be referenced within a page using another <a href="#anchor" title="go here">anchor</a>. In general we want links to go to other pages, such as <a href="https://developer.mozilla.org">this</a> one.</p>
+<hr/>
+<!-- this is a comment -->
+<table border="1">
+    <thead>
+        <tr>
+            <th>Centered by Default</th>
+            <th>Column Header</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Row</td>
+            <td>Content</td>
+        </tr>
+        <tr>
+            <td colspan="2">span two columns to format our table better</td>
+        </tr>
+        <tr>
+            <td>Lazy...</td>
+        </tr>
+        <tr>
+            <td>Here is an ordered list
+                <ol>
+                    <li>first item</li>
+                    <ol>
+                        <li>nested item</li>
+                    </ol>
+                    <li>another item</li>
+                </ol>
+            </td>
+            <td>and an unordered list
+                <ul>
+                    <li>first item</li>
+                    <li>another item</li>
+                </ul>
+            </td>
+    </tbody>
+</table>
+<p>We must escape &lt; and &gt; in addition to &amp; and a few other character. Sometimes we want to control the amount of space "&nbsp;&nbsp;&nbsp;" in a cell in a table, we can do that with non-breaking spaces for example.</p>
+<pre>
+Pre-formatted text will   appear   as  it is written
+exactly (we hope)
+	<strong>And it <em>renders</em> some HTML!</strong>
+</pre>
+
+<code>
+function example() {
+	var foo = "bar";
+	console.log(foo);
+}
+</code>
+
+<hr/>
+<br/>
