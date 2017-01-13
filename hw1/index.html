@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<body>
+<h1>Pizza Order Form</h1>
+
+<img src="brokenImage.jpg" alt="Image Missing">
+
+<!-- TODO's: 1. is email correct check?  seems to be ok w/ x@y -->
+    
+<form method="GET" action="#" name="addUserForm">
+    <!--
+    <p> Account Name<br/><input type="text" name="ActName" required></p>
+	<p> Display Name (Opt.)<br/><input type="text" name="DispName"></p>
+    <p> Email Address<br/><input type="email" name="Email" required></p>
+	<p> Phone Number, i.e. 123-456-7899<br/><input type="tel" name="Tele" required pattern="\d\d\d[\-]\d\d\d[\-]\d\d\d\d"></p>
+    -->
+    <!-- DOB -->
+    <p> DOB<br/><input type="date" name="DOB" required></p>
+    <!-- Zipcode -->
+    <p> Zipcode, i.e. 12345<br/><input type="text" name="Zip" pattern="[\d]{5}" required></p>
+    <!-- Password and confirm password -->
+    <p> Password<br/><input type="password" name="Password" required></p>
+    <p> Confirm Password<br/><input type="password" name="ConfPassword" required></p>
+    
+    <!-- Hidden timestamp -->
+    <p><input type="hidden" name="TimeStamp" value="-1"></p>
+    
+	<p><input type="submit" value="Place Order" onclick="return validateFields(this.parent)"></p>
+	<p><input type="reset" value="Clear"></p>
+</form>
+<script>    
+    function validateFields(form){
+        if (!form) {
+            form = document.getElementById('addUserForm');
+        }
+        //alert(form);
+        
+        // TODO: Set the timestamp value
+        form.TimeStamp.value=Date.now();
+
+        // TODO: Ensure the passwords match
+        
+        //window.alert("yolo");
+        //window.alert(form.TimeStamp.value);
+        return true;
+    }
+</script>
+
+<hr/>
+<br/>
+
+</body>
+</html>
