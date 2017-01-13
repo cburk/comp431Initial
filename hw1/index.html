@@ -2,16 +2,14 @@
 <html lang="en-US">
 
 <body>
-<h1>Pizza Order Form</h1>
-
-<img src="brokenImage.jpg" alt="Image Missing">
+<h1>Website Form</h1>
 
 <!-- TODO's: 1. is email correct check?  seems to be ok w/ x@y -->
     
 <form method="GET" action="#" name="addUserForm">
     <!--
-    <p> Account Name<br/><input type="text" name="ActName" required></p>
-	<p> Display Name (Opt.)<br/><input type="text" name="DispName"></p>
+    <p> Account Name<br/><input type="text" name="ActName" pattern="[A-Za-z][A-Za-z1-9]+" required></p>
+    <p> Display Name (Opt.)<br/><input type="text" name="DispName"></p>
     <p> Email Address<br/><input type="email" name="Email" required></p>
 	<p> Phone Number, i.e. 123-456-7899<br/><input type="tel" name="Tele" required pattern="\d\d\d[\-]\d\d\d[\-]\d\d\d\d"></p>
     -->
@@ -40,6 +38,8 @@
         form.TimeStamp.value=Date.now();
 
         // TODO: Ensure the passwords match
+        
+        // TODO: Ensure DOB is less than a certain amount
         
         //window.alert("yolo");
         //window.alert(form.TimeStamp.value);
