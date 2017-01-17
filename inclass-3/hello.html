@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <title>Hello HTML!</title>
+    <meta charset="utf-8">
+</head>
+
+<body>
+
+<table border="1">
+	<tr><td>Athenian</td><td>Owl</td></tr>
+	<tr><td colspan="2"><img src="http://explore.rice.edu/uploadedImages/Explore/Welcome_to_Rice/riceacademicseal1.jpg"></td></tr>
+</table>
+
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+<ul>
+	<li><a href="http://www.rice.edu">Rice</a></li>
+	<li><a href="http://www.chron.com">Houston Chronicle</a></li>
+	<li><a href="http://www.twitter.com">Twitter</a></li>
+	<li><a href="http://www.twosigma.com">TwoSigma</a></li>
+</ul>
+
+<textarea rows="10" cols="50" id="textBox">
+
+
+ --- Enter your message here --- 
+
+</textarea>
+    <p><button type="button" onclick='getElementById("textBox").value="--- Enter your message here ---"'>Reset</button></p>
+    <p><span id="indicator" value="N/A">N/A</span></p>
+    <p><button onclick='pause()'>pause</button></p>
+    <p><button onclick='resume()'>resume</button></p>
+
+<script>
+    let intID = -1;
+    function pause(){
+        console.log("Pause, intid: " + intID);
+        clearInterval(intID);
+    }
+    function resume(){
+        console.log("Resumed, intid: " + intID);
+        intID=setInterval(countDown, 1000);
+        console.log("Resumed, intid: " + intID);
+    }
+    function countDown(){
+        console.log(intID);
+        let ttg = document.getElementById('indicator').innerHTML;
+        ttg -= 1;
+        document.getElementById('indicator').innerHTML=ttg;
+        if (ttg == 0){
+          clearInterval(intID);
+          window.location.replace("https://www.clear.rice.edu/comp431/sample/hello.html");
+        }
+    }
+    function helloWorld(){
+        alert("15 seconds till redirect");
+        //setTimeout(countDown, 1000, 15)
+        document.getElementById('indicator').innerHTML=15;
+        intID = setInterval(countDown, 1000);
+        console.log(intID);
+    }
+    setTimeout(helloWorld, 5000);
+</script>
