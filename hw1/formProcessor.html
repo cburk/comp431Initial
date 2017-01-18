@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en-US">
 
+<head>
+</head>
+
 <body>
 <h1>Form Processor</h1>
 <table id="paramsTable">
@@ -10,7 +13,7 @@
     </tr>
 </table>
     
-<script>
+<script>    
     let url = window.location.href;
     let paramPairs = url.split('?').slice(1)[0].split('&');
     let paramTable = document.getElementById('paramsTable');
@@ -23,11 +26,9 @@
         if(pairSplit[0] == 'TimeStamp'){
             paramVal.innerHTML = new Date(parseInt(pairSplit[1]));
         }else{
-            paramVal.innerHTML = pairSplit[1];   
+            paramVal.innerHTML = decodeURIComponent(pairSplit[1]);
         }
     });
-    
-    //1484703750722
     
 </script>
 
