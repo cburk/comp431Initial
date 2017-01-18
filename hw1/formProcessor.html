@@ -20,8 +20,14 @@
         let paramVal = thisRow.insertCell(1);
         let pairSplit = x.split('=');
         paramName.innerHTML = pairSplit[0];
-        paramVal.innerHTML = pairSplit[1];
+        if(pairSplit[0] == 'TimeStamp'){
+            paramVal.innerHTML = new Date(parseInt(pairSplit[1]));
+        }else{
+            paramVal.innerHTML = pairSplit[1];   
+        }
     });
+    
+    //1484703750722
     
 </script>
 
