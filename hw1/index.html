@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="en-US">
 
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Christian Burkhartsmeyer">
+</head>
+
 <body>
 <h1>Website Form</h1>
 
 <!-- TODO's: 1. is email correct check?  seems to be ok w/ x@y -->
     
 <form method="GET" action="formProcessor.html" id="addUserForm" name="addUserForm">
-    <!--
     <p> Account Name<br/><input type="text" name="ActName" pattern="[A-Za-z][A-Za-z1-9]+" required></p>
     <p> Display Name (Opt.)<br/><input type="text" name="DispName"></p>
     <p> Email Address<br/><input type="email" name="Email" required></p>
 	<p> Phone Number, i.e. 123-456-7899<br/><input type="tel" name="Tele" required pattern="\d\d\d[\-]\d\d\d[\-]\d\d\d\d"></p>
-    -->
     <!-- DOB -->
     <p> DOB<br/><input type="date" name="DOB" id="DOB" required></p>
     <!-- Zipcode -->
@@ -28,24 +31,30 @@
 	<p><input type="reset" value="Clear"></p>
 </form>
 <script>
-    <!-- Put outside of body? -->
     function validateFields(form){
         if (!form) {
             form = document.getElementById('addUserForm');
         }
+
+        let curTime = Date.now();
+        form.TimeStamp.value = curTime;
         
-        form.TimeStamp.value=Date.now();
+        let curDate = new Date(curTime);
+        let cutoffYear = curDate.getFullYear() - 18;
+        let cutoffTime = new Date(curDate.setFullYear(cutoffYear));
+        let birthTime = new Date(Date.parse(document.getElementById('DOB').value));
+        if (cutoffTime.getTime() < birthTime.getTime()){
+            alert('Users must be 18 years or older');
+            return false;
+        }
 
         let pass1 = document.getElementById('Password').value;
         let pass2 = document.getElementById('ConfPassword').value;
-        if(pass1 != pass2){
+        if (pass1 != pass2){
             alert('Password: '+pass1+' does not match confirmation: '+pass2);
             return false;
         }
-        
-        // TODO: Ensure DOB is less than a certain amount
-        
-        
+                
         return true;
     }
 </script>
