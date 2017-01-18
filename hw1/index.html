@@ -8,8 +8,6 @@
 
 <body>
 <h1>Website Form</h1>
-
-<!-- TODO's: 1. is email correct check?  seems to be ok w/ x@y -->
     
 <form method="GET" action="formProcessor.html" id="addUserForm" name="addUserForm">
     <p> Account Name<br/><input type="text" name="ActName" pattern="[A-Za-z][A-Za-z1-9]+" required></p>
@@ -36,9 +34,11 @@
             form = document.getElementById('addUserForm');
         }
 
+        <!-- Set timestamp -->
         let curTime = Date.now();
         form.TimeStamp.value = curTime;
         
+        <!-- Ensure users are 18+ -->
         let curDate = new Date(curTime);
         let cutoffYear = curDate.getFullYear() - 18;
         let cutoffTime = new Date(curDate.setFullYear(cutoffYear));
@@ -48,13 +48,14 @@
             return false;
         }
 
+        <!-- Ensure passwords match -->
         let pass1 = document.getElementById('Password').value;
         let pass2 = document.getElementById('ConfPassword').value;
         if (pass1 != pass2){
             alert('Password: '+pass1+' does not match confirmation: '+pass2);
             return false;
         }
-                
+        
         return true;
     }
 </script>
