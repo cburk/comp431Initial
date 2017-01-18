@@ -6,7 +6,7 @@
 
 <!-- TODO's: 1. is email correct check?  seems to be ok w/ x@y -->
     
-<form method="GET" action="#" name="addUserForm">
+<form method="GET" action="formProcessor.html" id="addUserForm" name="addUserForm">
     <!--
     <p> Account Name<br/><input type="text" name="ActName" pattern="[A-Za-z][A-Za-z1-9]+" required></p>
     <p> Display Name (Opt.)<br/><input type="text" name="DispName"></p>
@@ -14,35 +14,38 @@
 	<p> Phone Number, i.e. 123-456-7899<br/><input type="tel" name="Tele" required pattern="\d\d\d[\-]\d\d\d[\-]\d\d\d\d"></p>
     -->
     <!-- DOB -->
-    <p> DOB<br/><input type="date" name="DOB" required></p>
+    <p> DOB<br/><input type="date" name="DOB" id="DOB" required></p>
     <!-- Zipcode -->
-    <p> Zipcode, i.e. 12345<br/><input type="text" name="Zip" pattern="[\d]{5}" required></p>
+    <p> Zipcode, i.e. 12345<br/><input type="text" name="Zip" id="Zip" pattern="[\d]{5}" required></p>
     <!-- Password and confirm password -->
-    <p> Password<br/><input type="password" name="Password" required></p>
-    <p> Confirm Password<br/><input type="password" name="ConfPassword" required></p>
+    <p> Password<br/><input type="password" name="Password" id="Password" required></p>
+    <p> Confirm Password<br/><input type="password" name="ConfPassword" id="ConfPassword" required></p>
     
     <!-- Hidden timestamp -->
-    <p><input type="hidden" name="TimeStamp" value="-1"></p>
+    <p><input type="hidden" name="TimeStamp" id="TimeStamp" value="-1"></p>
     
 	<p><input type="submit" value="Place Order" onclick="return validateFields(this.parent)"></p>
 	<p><input type="reset" value="Clear"></p>
 </form>
-<script>    
+<script>
+    <!-- Put outside of body? -->
     function validateFields(form){
         if (!form) {
             form = document.getElementById('addUserForm');
         }
-        //alert(form);
         
-        // TODO: Set the timestamp value
         form.TimeStamp.value=Date.now();
 
-        // TODO: Ensure the passwords match
+        let pass1 = document.getElementById('Password').value;
+        let pass2 = document.getElementById('ConfPassword').value;
+        if(pass1 != pass2){
+            alert('Password: '+pass1+' does not match confirmation: '+pass2);
+            return false;
+        }
         
         // TODO: Ensure DOB is less than a certain amount
         
-        //window.alert("yolo");
-        //window.alert(form.TimeStamp.value);
+        
         return true;
     }
 </script>
