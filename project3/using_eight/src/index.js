@@ -61,14 +61,23 @@ const starter = {
             console.log(starter.loadedImgs[0])
             console.log(typeof(starter.loadedImgs))
             console.log("Wat?")
-            // Spawn 2 people at random locations
+            
+            //Draw people at the slope angle
+            let angle_rads = Math.atan(slope)
+
+            // Spawn 2 people at random locations on the slope
             starter.loadedImgs.forEach(function(a){
                 // TOOD: Pull out into object defn w/ just image passed
                 let xCoord = Math.floor(Math.random() * xMax)
                 let yCoord = y0 + (slope * xCoord)
                 console.log("X: " + xCoord)
                 console.log("Y: " + yCoord)
-                c.drawImage(e.path[0], xCoord, yCoord, 50, 50)
+                
+                c.save()
+                c.translate(xCoord, yCoord)
+                c.rotate(angle_rads)
+                c.drawImage(a, 0, -50, 50, 50)
+                c.restore()
             })
         }
     }
