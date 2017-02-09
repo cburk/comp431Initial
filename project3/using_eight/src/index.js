@@ -1,5 +1,30 @@
-// Nothing to change in this file
-import particle, { update } from './particle'
+import bullet, { update } from './bullet'
+
+const startRound = function(){
+    const canvas = document.getElementById('app')
+    const c = canvas.getContext("2d")
+    let round_state = gameStateFactory()
+    console.log("Found state: ", round_state)
+    
+    frameUpdate((dt) => {
+        // Move all fired bullets
+        round_state.bulletsFired.map((b) => update(b, dt, canvas))
+
+        // TODO Future: Move arm(s) towards mouse?
+        
+        //c.fillStyle = '#000'
+        //c.fillRect(0, 0, canvas.width, canvas.height)
+        // Draw bullets
+        round_state.bulletsFired.forEach(({position, mass}) => {
+            const [x, y] = position
+            c.fillStyle = 'red'
+            c.beginPath()
+            c.arc(x, y, mass, 0, 2 * Math.PI)
+            c.fill()
+            //log(`(${mass.toFixed(2)}) @ (${x.toFixed(6)}, ${y.toFixed(6)})`)
+        })
+    })
+}
 
 const getLogger = (c, height) => {
     const log = (msg) => {
@@ -26,6 +51,14 @@ const frameUpdate = (cb) => {
     rAF() // go!
 }
 
+const gameStateFactory = function() {
+    return {
+        playerAmmo : 1,
+        aiAmmo : 1,
+        bulletsFired : [bullet()]
+    }
+}
+
 const starter = {
     loadedCount : 0,
     loadedImgs : [],
@@ -43,13 +76,13 @@ const starter = {
             
             // Draw slope
             // TOOD: Use real y range
-            let y0 = Math.floor(Math.random() * 300)
-            let y1 = Math.floor(Math.random() * 300)
+            let y0 = Math.floor(Math.random() * canvas.height)
+            let y1 = Math.floor(Math.random() * canvas.height)
             // TODO: real x range
-            let xMax = 300
+            let xMax = canvas.width
             c.beginPath()
             c.moveTo(0, y0)
-            c.lineTo(300, y1)
+            c.lineTo(xMax, y1)
             c.stroke()
             
             let slope = (y1 - y0) / xMax
@@ -78,7 +111,12 @@ const starter = {
                 c.rotate(angle_rads)
                 c.drawImage(a, 0, -50, 50, 50)
                 c.restore()
+                
+                bullet()
             })
+            
+            // Now that all initialization is done, start round
+            startRound()
         }
     }
 }
@@ -100,25 +138,5 @@ window.onload = () => {
     stick_img2.src = "stickFigure.png"
     stick_img2.alt = "Error loading file 2"
     stick_img2.onload = gameStarter.checkStart
-    
-    /*
-    let particles = Array(5).fill(true).map(() => particle())
-    const log = getLogger(c, canvas.height)
-    frameUpdate((dt) => {
-        particles = particles.map((p) => update(p, dt, canvas))
 
-        log()
-        c.fillStyle = '#000'
-        c.fillRect(0, 0, canvas.width, canvas.height)
-
-        particles.forEach(({position, mass}) => {
-            const [x, y] = position
-            c.fillStyle = 'red'
-            c.beginPath()
-            c.arc(x, y, mass, 0, 2 * Math.PI)
-            c.fill()
-            log(`(${mass.toFixed(2)}) @ (${x.toFixed(6)}, ${y.toFixed(6)})`)
-        })
-    })
-    */
 }

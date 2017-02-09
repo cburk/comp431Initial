@@ -1,18 +1,20 @@
 const random = (min=0, max=800) =>
     Math.random() * (max - min) + min
 
+const speed = 20
+
 // default values
-const particle = ({
-    mass=random(5, 30),
+const bullet = ({
+    mass=random(5, 10),
     position=[random(), random()],
     velocity=[random(-0.1, 0.1), random(-0.1, 0.1)],
-    acceleration=[0, 0]
 } = {}) => {
-    return {acceleration, velocity, position, mass}
+    return {velocity, position, mass}
 }
 
-const update = ({acceleration, velocity, position, mass}, delta=1.0, canvas=null) => {
+const update = ({velocity, position, mass}, delta=1.0, canvas=null) => {
     position[0] = position[0] + (velocity[0] * delta)
+    // TODO: Canvas checking, can delete bullets outside of bounds
     if(canvas != null){
         if(position[0] > canvas.width){
             position[0] = 0
@@ -22,6 +24,7 @@ const update = ({acceleration, velocity, position, mass}, delta=1.0, canvas=null
         }
     }
     position[1] = position[1] + (velocity[1] * delta)
+    // TODO: Border checking
     if(canvas != null){
         if(position[1] > canvas.height){
             position[1] = 0
@@ -30,11 +33,9 @@ const update = ({acceleration, velocity, position, mass}, delta=1.0, canvas=null
             position[1] = canvas.height
         }
     }
-    velocity[0] = velocity[0] + (acceleration[0] * delta)
-    velocity[1] = velocity[1] + (acceleration[1] * delta)
-    return { mass, acceleration, velocity, position }
+    return { velocity, position }
 }
 
-export default particle
+export default bullet
 
 export { update }
