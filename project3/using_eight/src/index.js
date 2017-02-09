@@ -1,6 +1,6 @@
 import bullet, { update } from './bullet'
 
-const startRound = function(p1coords, p2coords){
+const startRound = function(p1coords, p2coords, p1botRight, p2botRight){
     console.log("Starting round w/ coords: ", p1coords)
     
     const canvas = document.getElementById('app')
@@ -13,15 +13,39 @@ const startRound = function(p1coords, p2coords){
     
     // Make bullets fire when user clicks
     window.onclick = function(event){
-        console.log("Firing! from: ", p1coords, " TO: ", [event.clientX, event.clientY])
-        round_state.bulletsFired.push(bullet(p1coords, [event.clientX, event.clientY]))
+        if(round_state.playerAmmo > 0){
+            console.log("Firing! from: ", p1coords, " TO: ", [event.clientX, event.clientY])
+            // TODO: No magic
+            round_state.bulletsFired.push(bullet([p1coords[0] + 30, p1coords[1] - 30], [event.clientX, event.clientY], "You"))
+            round_state.playerAmmo -= 1
+            console.log(round_state.bulletsFired)
+        }else{
+            console.log("'Click'")
+        }
     }
     
     // Tell the game what to do each round
     frameUpdate((dt) => {
+        // Delete all old bullets
+        round_state.bulletsFired.forEach(({position, mass}) => {
+            const [x, y] = position
+            c.fillStyle = 'white'
+            c.beginPath()
+            c.arc(x, y, mass + 2, 0, 2 * Math.PI)
+            c.fill()
+            //log(`(${mass.toFixed(2)}) @ (${x.toFixed(6)}, ${y.toFixed(6)})`)
+        })
+        
         // Move all fired bullets
         round_state.bulletsFired.map((b) => update(b, dt, canvas))
 
+        // If any bullets hit, assign winner
+        //round_state.bulletsFired.forEach(({position, shooter}) => {
+        //    if(shooter == 'You'){
+        //        console.log("Bullet shot by player")
+        //    }
+        //})
+        
         // TODO Future: Move arm(s) towards mouse?
         
         //c.fillStyle = '#000'
@@ -65,8 +89,8 @@ const frameUpdate = (cb) => {
 
 const gameStateFactory = function() {
     return {
-        playerAmmo : 1,
-        aiAmmo : 1,
+        playerAmmo : 3,
+        aiAmmo : 3,
         bulletsFired : []
     }
 }
@@ -75,6 +99,7 @@ const starter = {
     loadedCount : 0,
     loadedImgs : [],
     checkStart : function(e){
+        window.onclick = function(event){console.log("Clickekd on: ", [event.clientX, event.clientY])}
         starter.loadedCount = starter.loadedCount + 1
         starter.loadedImgs.push(this)
         
@@ -112,7 +137,9 @@ const starter = {
 
             // Spawn 2 people at random locations on the slope
             let coords = []
-            starter.loadedImgs.forEach(function(a){
+            let i = 0
+            let names = ["You", "Enemy"]
+            starter.loadedImgs.forEach(function(a){                
                 // TOOD: Pull out into object defn w/ just image passed
                 let xCoord = Math.floor(Math.random() * xMax)
                 let yCoord = y0 + (slope * xCoord)
@@ -123,19 +150,29 @@ const starter = {
                 c.translate(xCoord, yCoord)
                 c.rotate(angle_rads)
                 c.drawImage(a, 0, -50, 50, 50)
+                // Describe if it's you or other guy
+                c.fillText(names[i], 0, -60)
                 c.restore()
-                
+                                
                 coords.push([xCoord, yCoord])
+                i += 1
             })
             
+            //upper right of our player
+            let ur1 = [(coords[0][0] + Math.sqrt(2500 / (1 + Math.pow(-slope, 2)))), coords[0][1] - 50]
+            console.log("UR1", ur1)
+            //Upper right of ai
+            let ur2 = [(coords[1][0] + Math.sqrt(2500 / (1 + Math.pow(-slope, 2)))), coords[1][1] - 50]
+            console.log("UR2", ur2)
+            // Idea: If intersection between bullet's trajectory and this line, then kill
+            
             // Now that all initialization is done, start round
-            startRound(coords[0], coords[1])
+            startRound(coords[0], coords[1], ur1, ur2)
         }
     }
 }
 
-window.onload = () => {
-    
+window.onload = () => {    
     const canvas = document.getElementById('app')
     const c = canvas.getContext("2d")
     console.log("start up/window loaded")
