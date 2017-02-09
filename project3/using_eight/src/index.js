@@ -1,6 +1,39 @@
 import bullet, { update } from './bullet'
 
-const startRound = function(p1coords, p2coords, p1botRight, p2botRight){
+// Put line in form y = Ax + b based on two coords, return A, b
+const mxPlusB = function(segPt1, segPt2){
+    console.log("Finding line for: ", segPt1, " to: ", segPt2)
+    
+    let lineForm = {M: -1, b: -1}
+    lineForm.M = (segPt2[1] - segPt1[1])/(segPt2[0] - segPt1[0])
+    lineForm.b = segPt2[1] - (lineForm.M * segPt2[0])
+    
+    console.log("Line looks like: ", lineForm)
+    
+    return lineForm
+}
+
+const intersect = function(seg1Pt1, seg1Pt2, seg2Pt1, seg2Pt2){
+    let lineSeg1 = mxPlusB(seg1Pt1, seg1Pt2)
+    let lineSeg2 = mxPlusB(seg2Pt1, seg2Pt2)
+    
+    // Point on both lines?
+    // Correct division?
+    let possibleX = (lineSeg2.b - lineSeg1.b)/(lineSeg1.M - lineSeg2.M )
+    console.log("Possible x", possibleX)
+
+    // Is this intersection farther left or right than one of our line segments?
+    if((possibleX < Math.max(Math.min(seg1Pt1[0], seg1Pt2[0]), Math.min(seg2Pt1[0], seg2Pt2[0]))) 
+       || 
+       (possibleX > Math.min(Math.max(seg1Pt1[0], seg1Pt2[0]), Math.max(seg2Pt1[0], seg2Pt2[0])))){
+        return false
+    }
+
+    
+    return true
+}
+
+const startRound = function(p1coords, p2coords, p1upperRight, p2upperRight){
     console.log("Starting round w/ coords: ", p1coords)
     
     const canvas = document.getElementById('app')
@@ -17,6 +50,7 @@ const startRound = function(p1coords, p2coords, p1botRight, p2botRight){
             console.log("Firing! from: ", p1coords, " TO: ", [event.clientX, event.clientY])
             // TODO: No magic
             round_state.bulletsFired.push(bullet([p1coords[0] + 30, p1coords[1] - 30], [event.clientX, event.clientY], "You"))
+            console.log("Will it hit/intersect? ", intersect(p2coords, p2upperRight, p1coords, [event.clientX, event.clientY]))
             round_state.playerAmmo -= 1
             console.log(round_state.bulletsFired)
         }else{
