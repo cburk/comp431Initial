@@ -4,14 +4,16 @@ const random = (min=0, max=800) =>
 const speed = 20
 
 // default values
-const bullet = ({
-    mass=random(5, 10),
-    position=[random(), random()],
-    velocity=[random(-0.1, 0.1), random(-0.1, 0.1)],
-} = {}) => {
-    return {velocity, position, mass}
+const bullet = function(p1, p2){
+    return {
+        mass : 3,
+        //let deltaX = p2[0] - p1[0]
+        //let deltaY = Math.abs(p2[1] - p1[1]) + Math.abs(p2[0] - p1[0])
+        position : [p1[0], p1[1]],
+        velocity : [(p2[0] - p1[0])/(Math.abs(p2[1] - p1[1]) + Math.abs(p2[0] - p1[0])), (p2[1] - p1[1])/(Math.abs(p2[1] - p1[1]) + Math.abs(p2[0] -p1[0]))],
+    }
 }
-
+    
 const update = ({velocity, position, mass}, delta=1.0, canvas=null) => {
     position[0] = position[0] + (velocity[0] * delta)
     // TODO: Canvas checking, can delete bullets outside of bounds

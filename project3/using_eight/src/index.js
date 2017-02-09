@@ -1,11 +1,23 @@
 import bullet, { update } from './bullet'
 
-const startRound = function(){
+const startRound = function(p1coords, p2coords){
+    console.log("Starting round w/ coords: ", p1coords)
+    
     const canvas = document.getElementById('app')
     const c = canvas.getContext("2d")
+    // Reset state
     let round_state = gameStateFactory()
     console.log("Found state: ", round_state)
     
+    // TODO: Create players w/ states
+    
+    // Make bullets fire when user clicks
+    window.onclick = function(event){
+        console.log("Firing! from: ", p1coords, " TO: ", [event.clientX, event.clientY])
+        round_state.bulletsFired.push(bullet(p1coords, [event.clientX, event.clientY]))
+    }
+    
+    // Tell the game what to do each round
     frameUpdate((dt) => {
         // Move all fired bullets
         round_state.bulletsFired.map((b) => update(b, dt, canvas))
@@ -55,7 +67,7 @@ const gameStateFactory = function() {
     return {
         playerAmmo : 1,
         aiAmmo : 1,
-        bulletsFired : [bullet()]
+        bulletsFired : []
     }
 }
 
@@ -99,6 +111,7 @@ const starter = {
             let angle_rads = Math.atan(slope)
 
             // Spawn 2 people at random locations on the slope
+            let coords = []
             starter.loadedImgs.forEach(function(a){
                 // TOOD: Pull out into object defn w/ just image passed
                 let xCoord = Math.floor(Math.random() * xMax)
@@ -112,16 +125,17 @@ const starter = {
                 c.drawImage(a, 0, -50, 50, 50)
                 c.restore()
                 
-                bullet()
+                coords.push([xCoord, yCoord])
             })
             
             // Now that all initialization is done, start round
-            startRound()
+            startRound(coords[0], coords[1])
         }
     }
 }
 
 window.onload = () => {
+    
     const canvas = document.getElementById('app')
     const c = canvas.getContext("2d")
     console.log("start up/window loaded")
