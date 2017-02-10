@@ -2,13 +2,13 @@ import bullet, { update } from './bullet'
 
 // Put line in form y = Ax + b based on two coords, return A, b
 const mxPlusB = function(segPt1, segPt2){
-    console.log("Finding line for: ", segPt1, " to: ", segPt2)
+    //console.log("Finding line for: ", segPt1, " to: ", segPt2)
     
     let lineForm = {M: -1, b: -1}
     lineForm.M = (segPt2[1] - segPt1[1])/(segPt2[0] - segPt1[0])
     lineForm.b = segPt2[1] - (lineForm.M * segPt2[0])
     
-    console.log("Line looks like: ", lineForm)
+    //console.log("Line looks like: ", lineForm)
     
     return lineForm
 }
@@ -20,17 +20,18 @@ const intersect = function(seg1Pt1, seg1Pt2, seg2Pt1, seg2Pt2){
     // Point on both lines?
     // Correct division?
     let possibleX = (lineSeg2.b - lineSeg1.b)/(lineSeg1.M - lineSeg2.M )
-    console.log("Possible x", possibleX)
+    //console.log("Possible x", possibleX)
 
     // Is this intersection farther left or right than one of our line segments?
+    // TODO: Make it so clicking short of target isn't issue
     if((possibleX < Math.max(Math.min(seg1Pt1[0], seg1Pt2[0]), Math.min(seg2Pt1[0], seg2Pt2[0]))) 
        || 
        (possibleX > Math.min(Math.max(seg1Pt1[0], seg1Pt2[0]), Math.max(seg2Pt1[0], seg2Pt2[0])))){
-        return false
+        return [false, -1]
     }
 
     
-    return true
+    return [true, Math.abs(possibleX - seg2Pt1[0])]
 }
 
 const startRound = function(p1coords, p2coords, p1upperRight, p2upperRight){
@@ -40,24 +41,45 @@ const startRound = function(p1coords, p2coords, p1upperRight, p2upperRight){
     const c = canvas.getContext("2d")
     // Reset state
     let round_state = gameStateFactory()
-    console.log("Found state: ", round_state)
+    //console.log("Found state: ", round_state)
     
     // TODO: Create players w/ states
+    
+    let aiAmmoDiv = document.getElementById('aiAmmo')
+    aiAmmoDiv.innerHTML = round_state.aiAmmo
+    let playerAmmoDiv = document.getElementById('playerAmmo')
+    playerAmmoDiv.innerHTML = round_state.playerAmmo
+    let bulletsFiredDiv = document.getElementById('bulletsFired')
     
     // Make bullets fire when user clicks
     window.onclick = function(event){
         if(round_state.playerAmmo > 0){
-            console.log("Firing! from: ", p1coords, " TO: ", [event.clientX, event.clientY])
+            //console.log("Firing! from: ", p1coords, " TO: ", [event.clientX, event.clientY])
+            //console.log(event)
+            
+            playerAmmoDiv.innerHTML -= 1
+            bulletsFiredDiv.innerHTML = parseInt(bulletsFiredDiv.innerHTML)
+            
             // TODO: No magic
-            round_state.bulletsFired.push(bullet([p1coords[0] + 30, p1coords[1] - 30], [event.clientX, event.clientY], "You"))
-            console.log("Will it hit/intersect? ", intersect(p2coords, p2upperRight, p1coords, [event.clientX, event.clientY]))
+            let firing_pos = [p1coords[0] + 30, p1coords[1] - 30]
+            round_state.bulletsFired.push(bullet(firing_pos, [event.clientX, event.clientY], "You"))
+            //console.log("Will it hit/intersect? ", intersect(p2coords, p2upperRight, firing_pos, [event.clientX, event.clientY]))
+
+            let intersRes = intersect(p2coords, p2upperRight, p1coords, [event.clientX, event.clientY])
+            if(intersRes[0] && round_state.winCountdown.victor == null){
+                //console.log("Found new winner, player!")
+                round_state.winCountdown.victor = "Player"
+                round_state.winCountdown.countdown = 10
+            }
+            
             round_state.playerAmmo -= 1
-            console.log(round_state.bulletsFired)
+            //console.log(round_state.bulletsFired)
         }else{
-            console.log("'Click'")
+            //console.log("'Click'")
         }
     }
     
+    let playing=true
     // Tell the game what to do each round
     frameUpdate((dt) => {
         // Delete all old bullets
@@ -70,18 +92,20 @@ const startRound = function(p1coords, p2coords, p1upperRight, p2upperRight){
             //log(`(${mass.toFixed(2)}) @ (${x.toFixed(6)}, ${y.toFixed(6)})`)
         })
         
+        if(round_state.winCountdown.countdown > 0)
+            round_state.winCountdown.countdown -= 1
+        //console.log(round_state.winCountdown.countdown)
+        //console.log(round_state.winCountdown.victor)
+        if(round_state.winCountdown.countdown == 0){
+            console.log(round_state.winCountdown.victor, " won the round!")
+            document.getElementById('winner').innerHTML = round_state.winCountdown.victor
+            // TOOD: Option to start again
+            return
+        }
+        
         // Move all fired bullets
         round_state.bulletsFired.map((b) => update(b, dt, canvas))
-
-        // If any bullets hit, assign winner
-        //round_state.bulletsFired.forEach(({position, shooter}) => {
-        //    if(shooter == 'You'){
-        //        console.log("Bullet shot by player")
-        //    }
-        //})
-        
-        // TODO Future: Move arm(s) towards mouse?
-        
+                
         //c.fillStyle = '#000'
         //c.fillRect(0, 0, canvas.width, canvas.height)
         // Draw bullets
@@ -125,7 +149,11 @@ const gameStateFactory = function() {
     return {
         playerAmmo : 3,
         aiAmmo : 3,
-        bulletsFired : []
+        bulletsFired : [],
+        winCountdown : {
+            victor: null,
+            countdown: -1
+        }
     }
 }
 
@@ -157,14 +185,14 @@ const starter = {
             c.stroke()
             
             let slope = (y1 - y0) / xMax
-            console.log("Y0 ", y0)
-            console.log("Y1 ", y1)
-            console.log("Slope ", slope)
+            //console.log("Y0 ", y0)
+            //console.log("Y1 ", y1)
+            //console.log("Slope ", slope)
             
             
-            console.log(starter.loadedImgs[0])
-            console.log(typeof(starter.loadedImgs))
-            console.log("Wat?")
+            //console.log(starter.loadedImgs[0])
+            //console.log(typeof(starter.loadedImgs))
+            //console.log("Wat?")
             
             //Draw people at the slope angle
             let angle_rads = Math.atan(slope)
@@ -177,8 +205,8 @@ const starter = {
                 // TOOD: Pull out into object defn w/ just image passed
                 let xCoord = Math.floor(Math.random() * xMax)
                 let yCoord = y0 + (slope * xCoord)
-                console.log("X: " + xCoord)
-                console.log("Y: " + yCoord)
+                //console.log("X: " + xCoord)
+                //console.log("Y: " + yCoord)
                 
                 c.save()
                 c.translate(xCoord, yCoord)
@@ -209,7 +237,7 @@ const starter = {
 window.onload = () => {    
     const canvas = document.getElementById('app')
     const c = canvas.getContext("2d")
-    console.log("start up/window loaded")
+    //console.log("start up/window loaded")
     const gameStarter = starter
     
     let stick_img = new Image()
