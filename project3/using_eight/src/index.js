@@ -94,13 +94,21 @@ const startRound = function(p1coords, p2coords, p1upperRight, p2upperRight){
         
         if(round_state.winCountdown.countdown > 0)
             round_state.winCountdown.countdown -= 1
-        //console.log(round_state.winCountdown.countdown)
-        //console.log(round_state.winCountdown.victor)
         if(round_state.winCountdown.countdown == 0){
-            console.log(round_state.winCountdown.victor, " won the round!")
+            //console.log(round_state.winCountdown.victor, " won the round!")
             document.getElementById('winner').innerHTML = round_state.winCountdown.victor
             // TOOD: Option to start again
             return
+        }
+        
+        // There's a small chance the opponent will shoot back
+        if(Math.floor(Math.random() * 500) == 40){
+            if(round_state.winCountdown.victor == null){
+                round_state.winCountdown.victor = "Enemy"
+                round_state.winCountdown.countdown = 20
+                aiAmmoDiv.innerHTML = parseInt(aiAmmoDiv.innerHTML) - 1
+                round_state.bulletsFired.push(bullet([p2coords[0], p2coords[1] - 50], [p1coords[0], p1coords[1] - 50]))
+            }
         }
         
         // Move all fired bullets
@@ -161,7 +169,9 @@ const starter = {
     loadedCount : 0,
     loadedImgs : [],
     checkStart : function(e){
-        window.onclick = function(event){console.log("Clickekd on: ", [event.clientX, event.clientY])}
+        window.onclick = function(event){
+            //console.log("Clickekd on: ", [event.clientX, event.clientY])}
+        }
         starter.loadedCount = starter.loadedCount + 1
         starter.loadedImgs.push(this)
         
@@ -222,10 +232,10 @@ const starter = {
             
             //upper right of our player
             let ur1 = [(coords[0][0] + Math.sqrt(2500 / (1 + Math.pow(-slope, 2)))), coords[0][1] - 50]
-            console.log("UR1", ur1)
+            //console.log("UR1", ur1)
             //Upper right of ai
             let ur2 = [(coords[1][0] + Math.sqrt(2500 / (1 + Math.pow(-slope, 2)))), coords[1][1] - 50]
-            console.log("UR2", ur2)
+            //console.log("UR2", ur2)
             // Idea: If intersection between bullet's trajectory and this line, then kill
             
             // Now that all initialization is done, start round
